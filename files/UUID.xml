@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<RBProject version="2008r4.1">
+<block type="Module" ID="281328835">
+ <ObjName>UUID</ObjName>
+ <ObjContainerID>0</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Convert() As String</SourceLine>
+   <SourceLine>#if targetMacOS or targetLinux</SourceLine>
+   <SourceLine>soft declare sub uuid_unparse lib libuuid (ByRef u as uuidBytes, out as Ptr)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim m as new MemoryBlock(37)</SourceLine>
+   <SourceLine>uuid_unparse uuidData, m</SourceLine>
+   <SourceLine>return m.CString(0)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>0</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Compare</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Compare(u2 as UUID) As Integer</SourceLine>
+   <SourceLine>#if targetMacOS or targetLinux</SourceLine>
+   <SourceLine>soft declare function uuid_compare lib libuuid (ByRef uu1 as uuidBytes, ByRef uu2 as uuidBytes) as Integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim u2_uuidData as uuidBytes = u2.uuidData</SourceLine>
+   <SourceLine>return uuid_compare(uuidData, u2_uuidData)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>0</Shared>
+  <ItemParams>u2 as UUID</ItemParams>
+  <ItemResult>Integer</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Operator_Convert(value as String)</SourceLine>
+   <SourceLine>#if targetMacOS or targetLinux</SourceLine>
+   <SourceLine>soft declare function uuid_parse lib libuuid (inValue as CString, ByRef uu as uuidBytes) as Integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim returnCode as Integer = uuid_parse(value, uuidData)</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>0</Shared>
+  <ItemParams>value as String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Bytes</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Bytes() As uuidBytes</SourceLine>
+   <SourceLine>return me.uuidData</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>0</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult>uuidBytes</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NewUUIDV1</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NewUUIDV1() As UUID</SourceLine>
+   <SourceLine>dim u as new UUID</SourceLine>
+   <SourceLine>u.uuidData = GenerateTime</SourceLine>
+   <SourceLine>return u</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>'return NewUUID(AddressOf GenerateTime)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>1</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult>UUID</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NewUUIDV4</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NewUUIDV4() As UUID</SourceLine>
+   <SourceLine>dim u as new UUID</SourceLine>
+   <SourceLine>u.uuidData = Generate</SourceLine>
+   <SourceLine>return u</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>'return NewUUID(AddressOf Generate)</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>1</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult>UUID</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Generate</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function Generate() As uuidBytes</SourceLine>
+   <SourceLine>#if targetMacOS or targetLinux</SourceLine>
+   <SourceLine>soft declare sub uuid_generate lib libuuid (ByRef out as uuidBytes)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim data as uuidBytes</SourceLine>
+   <SourceLine>uuid_generate data</SourceLine>
+   <SourceLine>return data</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <Shared>1</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult>uuidBytes</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>GenerateTime</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function GenerateTime() As uuidBytes</SourceLine>
+   <SourceLine>#if targetMacOS or targetLinux</SourceLine>
+   <SourceLine>soft declare sub uuid_generate_time lib libuuid (ByRef out as uuidBytes)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dim data as uuidBytes</SourceLine>
+   <SourceLine>uuid_generate_time data</SourceLine>
+   <SourceLine>return data</SourceLine>
+   <SourceLine>#endif</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <Shared>1</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult>uuidBytes</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor()</SourceLine>
+   <SourceLine>//exists to prevent use of new operator outside class</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <Shared>0</Shared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>NewUUID</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Shared Function NewUUID(generator as UUIDGenerator) As UUID</SourceLine>
+   <SourceLine>dim u as new UUID</SourceLine>
+   <SourceLine>u.uuidData = generator.Invoke</SourceLine>
+   <SourceLine>return u</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>//This method can't be used right now: https://realsoftware.fogbugz.com/default.asp?2398_8mpp8i82</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <Shared>1</Shared>
+  <ItemParams>generator as UUIDGenerator</ItemParams>
+  <ItemResult>UUID</ItemResult>
+ </Method>
+ <Note>
+  <ItemName>ReadMe</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <NoteLine>ReadMe</NoteLine>
+   <NoteLine>UUID 5/12/2008</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>charles@declareSub.com</NoteLine>
+   <NoteLine>http://www.declareSub.com</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>UUID is a class that wraps some C functions for generating and manipulating UUIDs.  Mac OS and Linux are supported.  Were someone to supply the Windows</NoteLine>
+   <NoteLine>code, Windows would be supported as well.</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>The interface consists of the UUID class, and an auxiliary module UUIDModule whose purpose is</NoteLine>
+   <NoteLine>to store structure and delegate declarations.</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>UUID Creation</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>The UUID class has two shared methods for UUID creation.  NewUUIDV4 returns a version 4 UUID; that is, a randomly generated UUID.  </NoteLine>
+   <NoteLine>NewUUIDV1 returns a UUID based on a MAC address and timestamp.  For some situations, the use of a version 1 UUID might be considered a security risk.</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>You can also create a UUID from a formatted string via an Operator_Convert subroutine.</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>dim foo as UUID = "1b4e28ba-2fa1-11d2-883f-b9a76"</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>//UUID Manipulation</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>You can get the UUID value as a string formatted in a standard format, or as a uuidBytes structure. </NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>dim s as String = theUUID</NoteLine>
+   <NoteLine>dim bytes as uuidBytes = theUUID.Bytes</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>An Operator_Compare function allows for comparision of UUID objects by value.</NoteLine>
+  </ItemSource>
+  <ItemFlags>0</ItemFlags>
+ </Note>
+ <Property>
+  <ItemName>uuidData</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>uuidData As uuidBytes</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>uuidData As uuidBytes</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <Shared>0</Shared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <InheritsFrom>Object</InheritsFrom>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <InheritsFrom>Object</InheritsFrom>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <InheritsFrom>Object</InheritsFrom>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <InheritsFrom>Object</InheritsFrom>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <InheritsFrom>Object</InheritsFrom>
+  </ViewProperty>
+ </ViewBehavior>
+ <Constant>
+  <ItemName>libuuid</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemName>libuuid</ItemName>
+  <ItemType>0</ItemType>
+  <ItemDef>/lib/libuuid.so.1</ItemDef>
+  <ItemFlags>33</ItemFlags>
+  <ConstantInstance>
+   <ItemPlatform>5</ItemPlatform>
+   <ItemLanguage>0</ItemLanguage>
+   <ItemDef>/lib/libuuid.so.1</ItemDef>
+  </ConstantInstance>
+  <ConstantInstance>
+   <ItemPlatform>1</ItemPlatform>
+   <ItemLanguage>0</ItemLanguage>
+   <ItemDef>System.framework</ItemDef>
+  </ConstantInstance>
+ </Constant>
+</block>
+</RBProject>
