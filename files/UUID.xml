@@ -15,10 +15,10 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Convert() As String</SourceLine>
    <SourceLine>#if targetMacOS or targetLinux</SourceLine>
-   <SourceLine>soft declare sub uuid_unparse lib libuuid (ByRef u as uuidBytes, out as Ptr)</SourceLine>
+   <SourceLine>soft declare sub uuid_unparse lib libuuid (u as CString, out as Ptr)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>dim m as new MemoryBlock(37)</SourceLine>
-   <SourceLine>uuid_unparse uuidData, m</SourceLine>
+   <SourceLine>uuid_unparse me.uuidData, m</SourceLine>
    <SourceLine>return m.CString(0)</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Function</SourceLine>
@@ -38,11 +38,9 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Function Operator_Compare(u2 as UUID) As Integer</SourceLine>
    <SourceLine>#if targetMacOS or targetLinux</SourceLine>
-   <SourceLine>soft declare function uuid_compare lib libuuid (ByRef uu1 as uuidBytes, ByRef uu2 as uuidBytes) as Integer</SourceLine>
+   <SourceLine>soft declare function uuid_compare lib libuuid (uu1 as CString, uu2 as CString) as Integer</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>dim u2_uuidData as uuidBytes = u2.uuidData</SourceLine>
-   <SourceLine>return uuid_compare(uuidData, u2_uuidData)</SourceLine>
-   <SourceLine></SourceLine>
+   <SourceLine>return uuid_compare(me.uuidData, u2.uuidData)</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
@@ -61,9 +59,11 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Operator_Convert(value as String)</SourceLine>
    <SourceLine>#if targetMacOS or targetLinux</SourceLine>
-   <SourceLine>soft declare function uuid_parse lib libuuid (inValue as CString, ByRef uu as uuidBytes) as Integer</SourceLine>
+   <SourceLine>soft declare function uuid_parse lib libuuid (inValue as CString, uu as Ptr) as Integer</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>dim returnCode as Integer = uuid_parse(value, uuidData)</SourceLine>
+   <SourceLine>dim bytes as MemoryBlock = Newuuidbytes</SourceLine>
+   <SourceLine>dim returnCode as Integer = uuid_parse(value, bytes)</SourceLine>
+   <SourceLine>me.uuidData = bytes</SourceLine>
    <SourceLine>#endif</SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
@@ -75,12 +75,12 @@
   <ItemResult></ItemResult>
  </Method>
  <Method>
-  <ItemName>Bytes</ItemName>
+  <ItemName>Data</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Bytes() As uuidBytes</SourceLine>
+   <SourceLine>Function Data() As String</SourceLine>
    <SourceLine>return me.uuidData</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
@@ -89,7 +89,7 @@
   <ItemFlags>0</ItemFlags>
   <Shared>0</Shared>
   <ItemParams></ItemParams>
-  <ItemResult>uuidBytes</ItemResult>
+  <ItemResult>String</ItemResult>
  </Method>
  <Method>
   <ItemName>NewUUIDV1</ItemName>
@@ -97,12 +97,10 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Function NewUUIDV1() As UUID</SourceLine>
+   <SourceLine> Shared Function NewUUIDV1() As UUID</SourceLine>
    <SourceLine>dim u as new UUID</SourceLine>
    <SourceLine>u.uuidData = GenerateTime</SourceLine>
    <SourceLine>return u</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>'return NewUUID(AddressOf GenerateTime)</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -118,12 +116,10 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Function NewUUIDV4() As UUID</SourceLine>
+   <SourceLine> Shared Function NewUUIDV4() As UUID</SourceLine>
    <SourceLine>dim u as new UUID</SourceLine>
    <SourceLine>u.uuidData = Generate</SourceLine>
    <SourceLine>return u</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>'return NewUUID(AddressOf Generate)</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -139,11 +135,11 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Function Generate() As uuidBytes</SourceLine>
+   <SourceLine>Shared Function Generate() As String</SourceLine>
    <SourceLine>#if targetMacOS or targetLinux</SourceLine>
-   <SourceLine>soft declare sub uuid_generate lib libuuid (ByRef out as uuidBytes)</SourceLine>
+   <SourceLine>soft declare sub uuid_generate lib libuuid (out as Ptr)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>dim data as uuidBytes</SourceLine>
+   <SourceLine>dim data as MemoryBlock = Newuuidbytes</SourceLine>
    <SourceLine>uuid_generate data</SourceLine>
    <SourceLine>return data</SourceLine>
    <SourceLine>#endif</SourceLine>
@@ -154,7 +150,7 @@
   <ItemFlags>33</ItemFlags>
   <Shared>1</Shared>
   <ItemParams></ItemParams>
-  <ItemResult>uuidBytes</ItemResult>
+  <ItemResult>String</ItemResult>
  </Method>
  <Method>
   <ItemName>GenerateTime</ItemName>
@@ -162,11 +158,11 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Function GenerateTime() As uuidBytes</SourceLine>
+   <SourceLine>Shared Function GenerateTime() As String</SourceLine>
    <SourceLine>#if targetMacOS or targetLinux</SourceLine>
-   <SourceLine>soft declare sub uuid_generate_time lib libuuid (ByRef out as uuidBytes)</SourceLine>
+   <SourceLine>soft declare sub uuid_generate_time lib libuuid (out as Ptr)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>dim data as uuidBytes</SourceLine>
+   <SourceLine>dim data as MemoryBlock = Newuuidbytes</SourceLine>
    <SourceLine>uuid_generate_time data</SourceLine>
    <SourceLine>return data</SourceLine>
    <SourceLine>#endif</SourceLine>
@@ -177,7 +173,7 @@
   <ItemFlags>33</ItemFlags>
   <Shared>1</Shared>
   <ItemParams></ItemParams>
-  <ItemResult>uuidBytes</ItemResult>
+  <ItemResult>String</ItemResult>
  </Method>
  <Method>
   <ItemName>Constructor</ItemName>
@@ -197,25 +193,27 @@
   <ItemResult></ItemResult>
  </Method>
  <Method>
-  <ItemName>NewUUID</ItemName>
+  <ItemName>Newuuidbytes</ItemName>
   <Compatibility></Compatibility>
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Shared Function NewUUID(generator as UUIDGenerator) As UUID</SourceLine>
-   <SourceLine>dim u as new UUID</SourceLine>
-   <SourceLine>u.uuidData = generator.Invoke</SourceLine>
-   <SourceLine>return u</SourceLine>
+   <SourceLine>Shared Function Newuuidbytes() As MemoryBlock</SourceLine>
+   <SourceLine>// uuidbytes is the struct used to represent a uuid.</SourceLine>
+   <SourceLine>//I'm using a MemoryBlock instead of a structure because</SourceLine>
+   <SourceLine>//uuidbytes is nothing more than 16 bytes of Uint8, and</SourceLine>
+   <SourceLine>//using a MemoryBlock allows me to use a single class and</SourceLine>
+   <SourceLine>//be backward-compatible to 2007 r2 or so.</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>//This method can't be used right now: https://realsoftware.fogbugz.com/default.asp?2398_8mpp8i82</SourceLine>
+   <SourceLine>return new MemoryBlock(16)</SourceLine>
    <SourceLine>End Function</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
   <Shared>1</Shared>
-  <ItemParams>generator as UUIDGenerator</ItemParams>
-  <ItemResult>UUID</ItemResult>
+  <ItemParams></ItemParams>
+  <ItemResult>MemoryBlock</ItemResult>
  </Method>
  <Note>
   <ItemName>ReadMe</ItemName>
@@ -224,7 +222,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <NoteLine>ReadMe</NoteLine>
-   <NoteLine>UUID 5/12/2008</NoteLine>
+   <NoteLine>UUID 10/30/2008</NoteLine>
    <NoteLine></NoteLine>
    <NoteLine>charles@declareSub.com</NoteLine>
    <NoteLine>http://www.declareSub.com</NoteLine>
@@ -232,8 +230,6 @@
    <NoteLine>UUID is a class that wraps some C functions for generating and manipulating UUIDs.  Mac OS and Linux are supported.  Were someone to supply the Windows</NoteLine>
    <NoteLine>code, Windows would be supported as well.</NoteLine>
    <NoteLine></NoteLine>
-   <NoteLine>The interface consists of the UUID class, and an auxiliary module UUIDModule whose purpose is</NoteLine>
-   <NoteLine>to store structure and delegate declarations.</NoteLine>
    <NoteLine></NoteLine>
    <NoteLine></NoteLine>
    <NoteLine>UUID Creation</NoteLine>
@@ -263,11 +259,11 @@
   <Visible>1</Visible>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>uuidData As uuidBytes</SourceLine>
+   <SourceLine>uuidData As String</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>uuidData As uuidBytes</ItemDeclaration>
+  <ItemDeclaration>uuidData As String</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <Shared>0</Shared>
  </Property>
