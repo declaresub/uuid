@@ -215,6 +215,25 @@
   <ItemParams></ItemParams>
   <ItemResult>MemoryBlock</ItemResult>
  </Method>
+ <Method>
+  <ItemName>NewUUID</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine> Shared Function NewUUID(theuuid as UUID) As UUID</SourceLine>
+   <SourceLine>dim u as new UUID</SourceLine>
+   <SourceLine>u.uuidData = theuuid.uuidData</SourceLine>
+   <SourceLine>return u</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <Shared>1</Shared>
+  <ItemParams>theuuid as UUID</ItemParams>
+  <ItemResult>UUID</ItemResult>
+ </Method>
  <Note>
   <ItemName>ReadMe</ItemName>
   <Compatibility></Compatibility>
